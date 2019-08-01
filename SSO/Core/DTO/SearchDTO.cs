@@ -4,12 +4,10 @@ using System.Text;
 
 namespace SSO.Core.DTO
 {
-    public class PagedQuery<T>
+    public class SearchDTO
     {
+        public string Search { get; set; }
         public int Start { get; set; }
         public int Count { get; set; }
-        public int Total { get; set; }
-        public IEnumerable<T> Items { get; set; }
-        public string Search { get; set; }
     }
 }

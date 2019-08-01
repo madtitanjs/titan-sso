@@ -14,40 +14,14 @@ using System.Threading.Tasks;
 
 namespace SSO.Storage
 {
-    public class ClientStore : IDisposable
+    public class ClientStore : BaseStore, IClientStore
     {
-        private bool _disposed;
         public ClientStore(SSOConfigDbContext context)
         {
             Context = context;
         }
 
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await Context.SaveChangesAsync(cancellationToken);
-        }
-
-        /// <summary>
-        /// Throws if this class has been disposed.
-        /// </summary>
-        protected void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        /// <summary>
-        /// Dispose the store
-        /// </summary>
-        public void Dispose()
-        {
-            _disposed = true;
-        }
-
         #region STORE PROPS
-        internal SSOConfigDbContext Context { get; private set; }
         public DbSet<Client> Clients { get { return Context.Set<Client>(); } }
         public DbSet<ClientCorsOrigin> ClientCorsOrigins { get { return Context.Set<ClientCorsOrigin>(); } }
         public DbSet<ClientClaim> ClientClaims { get { return Context.Set<ClientClaim>(); } }

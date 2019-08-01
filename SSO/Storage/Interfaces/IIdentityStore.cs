@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SSO.Core.Context;
+using Microsoft.EntityFrameworkCore;
 using SSO.Core.Identity.Models;
+using System;
 
 namespace SSO.Storage
 {
-    public interface IIdentityStore
+    public interface IIdentityStore : IBaseStore, IDisposable
     {
-        SSODbContext Context { get; }
+        DbSet<RoleClaim> RoleClaims { get; }
         RoleManager<Role> RoleManager { get; }
+        DbSet<Role> Roles { get; }
+        DbSet<UserClaim> UserClaims { get; }
+        DbSet<UserLogin> UserLogins { get; }
         UserManager<User> UserManager { get; }
-
-        void Dispose();
+        DbSet<User> Users { get; }
+        DbSet<UserToken> UserTokens { get; }
     }
 }

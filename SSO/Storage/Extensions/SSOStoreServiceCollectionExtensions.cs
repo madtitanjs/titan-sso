@@ -9,7 +9,6 @@ namespace SSO.Storage.Extensions
     {
         public static IServiceCollection AddSSOStores(this IServiceCollection services)
         {
-            services.AddTransient<IClientStore, ClientStore>();
             services.AddTransient<IApiResourceStore, ApiResourceStore>();
             services.AddTransient<IIdentityStore, IdentityStore>();
             services.AddTransient<IIdentityResourceStore, IdentityResourceStore>();

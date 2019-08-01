@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SSO.Core.Extensions;
 using SSO.Storage.Extensions;
 
 namespace SSO
@@ -23,7 +25,8 @@ namespace SSO
         {
 
             // Configure database
-
+            services.AddSSOIdentity(options => options.UseSqlServer(Configuration.GetConnectionString("SSO")));
+            services.AddOIDC(options => options.UseSqlServer(Configuration.GetConnectionString("SSO")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory
