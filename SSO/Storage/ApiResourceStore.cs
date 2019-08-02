@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using SSO.Core;
 using SSO.Core.Context;
 using SSO.Core.DTO;
+using SSO.Core.Mapper;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +17,27 @@ namespace SSO.Storage
         public ApiResourceStore(SSOConfigDbContext context)
         {
             Context = context;
+        }
+
+        public async Task<IEnumerable<ApiResourceDTO>> Search(SearchDTO search)
+        {
+            var query = from api in Apis
+            .Include(x => x.UserClaims)
+            .Include(o => o.Secrets)
+            .Include(o => o.Scopes)
+            .ThenInclude(s => s.UserClaims)
+                        orderby api.Name
+                        select api;
+
+            if (!string.IsNullOrWhiteSpace(search.Search))
+            {
+                query = from obj in query
+                        where obj.Name.Contains(search.Search)
+                        orderby obj.Name
+                        select obj;
+            }
+
+            return await query.Select(s => s.ToDTO()).ToArrayAsync();
         }
         public DbSet<ApiResource> Apis { get { return Context.Set<ApiResource>(); } }
         public DbSet<ApiResourceClaim> ApiClaims { get { return Context.Set<ApiResourceClaim>(); } }

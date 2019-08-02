@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Services;
 using SSO.Core.Extensions;
-using SSO.Storage.Extensions;
+using SSO.Extensions;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SSO
 {
@@ -27,13 +30,43 @@ namespace SSO
             // Configure database
             services.AddSSOIdentity(options => options.UseSqlServer(Configuration.GetConnectionString("SSO")));
             services.AddOIDC(options => options.UseSqlServer(Configuration.GetConnectionString("SSO")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSSOServices();
+
+
+            services.AddSwaggerGen(op =>
+            {
+                op.SwaggerDoc("v1", new Info
+                {
+                    Title = "Titan SSO",
+                    Version = "v1",
+                    Description = "Titan single sign-on service",
+                    Contact = new Contact
+                    {
+                        Name = "Daryl Clarino",
+                        Email = "clarinojd@gmail.com",
+                        Url = "https://madtitan.com/clarinojd"
+                    },
+                    License = new License
+                    {
+                        Name = "MIT License",
+                        Url = "https://opensource.org/licenses/MIT"
+                    }
+                });
+                op.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddSession();
+
+            services
+    .AddMvc()
+    .AddSessionStateTempDataProvider()
+    .AddJsonOptions(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +85,17 @@ namespace SSO
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Secure Single Sign-on");
+            });
+            app.UseCookiePolicy();
+            app.UseSession();
+            app.UseAuthentication();
+            app.UseIdentityServer();
+
 
             app.UseMvc(routes =>
             {

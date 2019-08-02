@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SSO.Core.Identity.Models
 {
-    [Table("ClaimType")]
     public class ClaimType
     {
         public ClaimType()

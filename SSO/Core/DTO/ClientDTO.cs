@@ -18,7 +18,7 @@ namespace SSO.Core.DTO
         public List<string> AllowedCorsOrigins { get; set; }
         public List<string> AllowedScopes { get; set; }
         public List<string> Claims { get; set; }
-        public List<ClientSecretDTO> Secrets { get; set; }
+        public List<SecretDTO> Secrets { get; set; }
 
     }
 }

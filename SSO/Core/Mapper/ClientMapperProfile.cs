@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 using SSO.Core.DTO;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SSO.Core.Mapper
 {
@@ -34,7 +31,7 @@ namespace SSO.Core.Mapper
                 .ReverseMap()
                 .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => src));
 
-            CreateMap<ClientSecret, ClientSecretDTO>(MemberList.Destination)
+            CreateMap<ClientSecret, SecretDTO>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
                 .ReverseMap();
 

@@ -6,10 +6,8 @@ using System.Text;
 
 namespace SSO.Core.Identity.Models
 {
-    [Table("IdentityUserClaim")]
     public class UserClaim : IdentityUserClaim<Guid>
     {
-        [ForeignKey("UserId")]
         public virtual User User { get; set; }
     }
 }

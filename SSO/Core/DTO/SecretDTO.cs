@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SSO.Core.DTO
 {
-    public class ClientSecretDTO
+    public class SecretDTO
     {
         public string Type { get; set; } = "SharedSecret";
         public string Description { get; set; }

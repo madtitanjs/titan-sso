@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 using SSO.Core.DTO;
 
 namespace SSO.API
@@ -10,35 +11,46 @@ namespace SSO.API
     [Route("api/[controller]")]
     public class ClientController : Controller
     {
-   
-        [HttpGet]
-        public async Task<ActionResult<PagedQuery<ClientDTO>>> SearchClientAsync(string search = "", int start = 0, int count = 10)
+        private readonly IClientService clientService;
+
+        public ClientController(IClientService clientService)
         {
-            throw new NotImplementedException();
+            this.clientService = clientService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PagedQuery<ClientDTO>>> SearchClientAsync(SearchDTO searchDTO)
+        {
+            var result = await clientService.SearchClient(searchDTO);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientDTO>> GetClientAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await clientService.GetClientAsync(id);
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<ClientDTO>> CreateClientAsync([FromBody] ClientDTO dto)
         {
-            throw new NotImplementedException();
+            var result = await clientService.AddClientAsync(dto);
+            return Ok(result);
         }
 
         [HttpPut]
         public async Task<ActionResult<ClientDTO>> UpdateClientAsync([FromBody] ClientDTO dto)
         {
-            throw new NotImplementedException();
+            var result = await clientService.UpdateClientAsync(dto);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            await clientService.DeleteClientAsync(id);
+            return Ok();
         }
     }
 }

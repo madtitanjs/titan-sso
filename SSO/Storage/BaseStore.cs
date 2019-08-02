@@ -18,6 +18,7 @@ namespace SSO.Storage
         /// <summary>
         /// Throws if this class has been disposed.
         /// </summary>
+        /// 
         public void ThrowIfDisposed()
         {
             if (_disposed)

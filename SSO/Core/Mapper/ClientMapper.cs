@@ -33,12 +33,12 @@ namespace SSO.Core.Mapper
             return dto == null ? null : Mapper.Map<ClientClaim>(dto);
         }
 
-        public static ClientSecretDTO ToDTO(this ClientSecret entity)
+        public static SecretDTO ToDTO(this ClientSecret entity)
         {
-            return entity == null ? null : Mapper.Map<ClientSecretDTO>(entity);
+            return entity == null ? null : Mapper.Map<SecretDTO>(entity);
         }
 
-        public static ClientSecret ToEntity(this ClientSecretDTO dto)
+        public static ClientSecret ToEntity(this SecretDTO dto)
         {
             return dto == null ? null : Mapper.Map<ClientSecret>(dto);
         }

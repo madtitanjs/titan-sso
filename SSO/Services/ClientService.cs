@@ -1,28 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SSO.Core.DTO;
-using SSO.Storage;
 using System.Threading.Tasks;
 using System.Linq;
 using SSO.Core.Mapper;
 using SSO.Core;
 using System;
 using SSO.Core.IdentityServer;
-using IdentityServer4.Models;
+using IdentityServer4.EntityFramework.Entities;
+using SSO.Core.Context;
 
 namespace Services
 {
-    public class ClientService
+    public class ClientService : IClientService
     {
-        private readonly IClientStore store;
+        private readonly SSOConfigDbContext Context;
 
-        public ClientService(IClientStore store)
+        public ClientService(SSOConfigDbContext context)
         {
-            this.store = store;
+            Context = context;
         }
 
-        public async Task<PagedQuery<ClientDTO>> SearchClient(SearchDTO search)
+        public async Task<PagedQuery<ClientDTO>> SearchClient(SearchDTO searchDTO)
         {
-            var query = from client in store.Clients
+            var query = from client in Clients
                         .Include(c => c.ClientSecrets)
                         .Include(c => c.AllowedCorsOrigins)
                         .Include(c => c.AllowedGrantTypes)
@@ -34,24 +34,24 @@ namespace Services
                         orderby client.ClientName
                         select client;
             
-            if(!string.IsNullOrWhiteSpace(search.Search))
+            if(!string.IsNullOrWhiteSpace(searchDTO.Search))
             {
                 query = from client in query
-                        where client.ClientName.Contains(search.Search) || client.ClientId.Contains(search.Search)
+                        where client.ClientName.Contains(searchDTO.Search) || client.ClientId.Contains(searchDTO.Search)
                         orderby client.ClientName
                         select client;
             }
 
             int total = query.Count();
-            var clients = await query.Skip(search.Start).Take(search.Count).ToArrayAsync();
+            var clients = await query.Skip(searchDTO.Start).Take(searchDTO.Count).ToArrayAsync();
 
             var result = new PagedQuery<ClientDTO>
             {
-                Start = search.Start,
-                Count = search.Count,
+                Start = searchDTO.Start,
+                Count = searchDTO.Count,
                 Total = total,
                 Items = clients.Select(i => i.ToDTO()),
-                Search = search.Search
+                Search = searchDTO.Search
             };
 
             return result;
@@ -59,7 +59,7 @@ namespace Services
 
         public async Task<ClientDTO> GetClientAsync(int id)
         {
-            var query = from client in store.Clients
+            var query = from client in Clients
                         .Include(c => c.ClientSecrets)
                         .Include(c => c.AllowedCorsOrigins)
                         .Include(c => c.AllowedGrantTypes)
@@ -94,15 +94,80 @@ namespace Services
                     throw new Exception(Constants.Errors.InvalidGrantType);
             }
 
-            await store.Clients.AddAsync(entity);
-            await store.SaveChangesAsync();
+            await Clients.AddAsync(entity);
+            await Context.SaveChangesAsync();
 
             return entity.ToDTO();
         }
 
+        public async Task<ClientDTO> UpdateClientAsync(ClientDTO dto)
+        {
+            if (!await CanInsertAsync(dto)) throw new Exception(Constants.Errors.CantInsert);
+
+            var entity = dto.ToEntity();
+            if (entity.AllowedGrantTypes != null)
+            {
+                var grantTypes = Constants.Client.GrantTypes;
+                var notInScope = entity.AllowedGrantTypes
+                                    .Select(a => a.GrantType)
+                                    .Except(grantTypes)
+                                    .Any();
+                if (notInScope)
+                    throw new Exception(Constants.Errors.InvalidGrantType);
+            }
+
+            await RemoveClientRelationsAsync(dto.Id);
+            Clients.Update(entity);
+            await Context.SaveChangesAsync();
+
+            return entity.ToDTO();
+        }
+
+        public async Task DeleteClientAsync(int clientId)
+        {
+            var entity = Clients.Find(clientId);
+            if(Context.Entry(entity).State == EntityState.Detached)
+            {
+                Clients.Attach(entity);
+            }
+            Clients.Remove(entity);
+            await Context.SaveChangesAsync();
+        }
+
+        private async Task RemoveClientRelationsAsync(int clientId)
+        {
+            //Remove old claims
+            var clientClaims = await ClientClaims.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientClaims.RemoveRange(clientClaims);
+
+            //Remove old allowed scopes
+            var clientScopes = await ClientScopes.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientScopes.RemoveRange(clientScopes);
+
+            //Remove old grant types
+            var clientGrantTypes = await ClientGrantTypes.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientGrantTypes.RemoveRange(clientGrantTypes);
+
+            //Remove old redirect uri
+            var clientRedirectUris = await ClientRedirectUris.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientRedirectUris.RemoveRange(clientRedirectUris);
+
+            //Remove old client cors
+            var clientCorsOrigins = await ClientCorsOrigins.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientCorsOrigins.RemoveRange(clientCorsOrigins);
+
+            //Remove old client id restrictions
+            var clientIdPRestrictions = await ClientIdPRestrictions.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientIdPRestrictions.RemoveRange(clientIdPRestrictions);
+
+            //Remove old client post logout redirect
+            var clientPostLogoutRedirectUris = await ClientPostLogoutRedirectUris.Where(x => x.Client.Id == clientId).ToListAsync();
+            ClientPostLogoutRedirectUris.RemoveRange(clientPostLogoutRedirectUris);
+        }
+
         private async Task<bool> CanInsertAsync(ClientDTO dto)
         {
-            var query = await store.Clients.Where(x => x.ClientId == dto.ClientId && x.Id != dto.Id).SingleOrDefaultAsync();
+            var query = await Clients.Where(x => x.ClientId == dto.ClientId && x.Id != dto.Id).SingleOrDefaultAsync();
             return query == null;
         }
 
@@ -113,25 +178,39 @@ namespace Services
                 case ClientType.Empty:
                     break;
                 case ClientType.WebImplicit:
-                    client.AllowedGrantTypes.AddRange(GrantTypes.Implicit);
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Implicit);
                     client.AllowAccessTokensViaBrowser = true;
                     break;
                 case ClientType.WebHybrid:
-                    client.AllowedGrantTypes.AddRange(GrantTypes.Hybrid);
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Hybrid);
                     break;
                 case ClientType.Spa:
-                    client.AllowedGrantTypes.AddRange(GrantTypes.Implicit);
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Implicit);
                     client.AllowAccessTokensViaBrowser = true;
                     break;
                 case ClientType.Native:
-                    client.AllowedGrantTypes.AddRange(GrantTypes.Hybrid);
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Hybrid);
                     break;
                 case ClientType.Machine:
-                    client.AllowedGrantTypes.AddRange(GrantTypes.ResourceOwnerPasswordAndClientCredentials);
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.ResourceOwnerPasswordAndClientCredentials);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+
+        #region STORE PROPS
+        public DbSet<Client> Clients { get { return Context.Set<Client>(); } }
+        public DbSet<ClientCorsOrigin> ClientCorsOrigins { get { return Context.Set<ClientCorsOrigin>(); } }
+        public DbSet<ClientClaim> ClientClaims { get { return Context.Set<ClientClaim>(); } }
+        public DbSet<ClientGrantType> ClientGrantTypes { get { return Context.Set<ClientGrantType>(); } }
+        public DbSet<ClientIdPRestriction> ClientIdPRestrictions { get { return Context.Set<ClientIdPRestriction>(); } }
+        public DbSet<ClientPostLogoutRedirectUri> ClientPostLogoutRedirectUris { get { return Context.Set<ClientPostLogoutRedirectUri>(); } }
+        public DbSet<ClientProperty> ClientProperties { get { return Context.Set<ClientProperty>(); } }
+        public DbSet<ClientRedirectUri> ClientRedirectUris { get { return Context.Set<ClientRedirectUri>(); } }
+        public DbSet<ClientScope> ClientScopes { get { return Context.Set<ClientScope>(); } }
+        public DbSet<ClientSecret> ClientSecrets { get { return Context.Set<ClientSecret>(); } }
+        #endregion
     }
 }
