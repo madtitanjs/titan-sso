@@ -12,6 +12,7 @@ namespace Services
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IApiResourceService, ApiResourceService>();
             services.AddTransient<IIdentityResourceService, IdentityResourceService>();
+            services.AddTransient<IIdentityService, IdentityService>();
             return services;
         }
     }

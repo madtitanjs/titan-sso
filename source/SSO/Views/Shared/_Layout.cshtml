@@ -1,0 +1,93 @@
+﻿@using IdentityServer4.Extensions
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+    }
+
+    string title = "";
+    if (ViewData["Title"] != null)
+    {
+        title = " - " + (string)ViewData["Title"];
+    }
+    var disableHeader = false;
+    var disableFooter = false;
+
+    if (ViewData["DisableNavHeader"] != null)
+    {
+        disableHeader = (bool)ViewData["DisableNavHeader"];
+    }
+
+    if (ViewData["DisableNavFooter"] != null)
+    {
+        disableFooter = (bool)ViewData["DisableNavFooter"];
+    }
+    var defaultURL = _configuration["DEFAULT_APP"];
+    var appName = "Mad Titan Accounts";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>@appName @title</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="~/css/site.css" />
+
+</head>
+<body>
+
+
+    <div class="main-container">
+        @if (!disableHeader)
+        {
+            <div class="header">
+                <a href="~/">
+                    <h3 class="app-name">@appName</h3>
+                </a>
+                <span class="spacer"></span>
+                <a href="/home/about" class="header-link">
+                    About
+                </a>
+                <a href="#" class="header-link">
+                    Contact
+                </a>
+                @if (!User.IsAuthenticated())
+                {
+                    <a href="~/account/login" class="header-link">
+                        Login
+                    </a>
+                }
+                else
+                {
+                    <a href="~/account/logout" class="header-link">
+                        Logout
+                    </a>
+                }
+
+
+            </div>
+        }
+        <div class="content">
+            @RenderBody()
+        </div>
+        <div class="footer container" style="margin-top: 30px; height: 40px">
+            <span>©2019 Mad Titan</span>
+        </div>
+
+    </div>
+    @*<script src="/lib/bootstrap/js/bootstrap.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+@model ErrorViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    var error = Model?.Error?.Error;
+    var errorDescription = Model?.Error?.ErrorDescription;
+    var request_id = Model?.Error?.RequestId;
+    ViewData["DisableNavHeader"] = false;
+    ViewData["DisableNavFooter"] = true;
+    ViewData["Title"] = "Sign in";
+    var defaultURL = _configuration["DEFAULT_APP"];
+}
+
+
+<div class="content-body" style="max-width: 500px; align-self: center;">
+    <div style="align-items: center; text-align: center; display: flex; flex-direction: column">
+
+
+        <div class="bordered-card" style="text-align: center; display: flex; flex-direction: column; margin-top: 20px; flex-grow: 1;  align-self: stretch; place-content: flex-start; justify-content: flex-start;">
+            <div style="text-align: center">
+                <span style="font-weight: 500; font-size: 14px">
+                    Error Occurred
+                </span>
+
+            </div>
+            <div style="margin-top: 20px; font-size: 15px;">
+                @if (error != null)
+                {
+                    <strong>
+                        <em>
+                            : @error
+                        </em>
+                    </strong>
+
+                    if (errorDescription != null)
+                    {
+                        <div>@errorDescription</div>
+                    }
+                }
+                @if (request_id != null)
+                {
+                    <div class="request-id">Request Id: @request_id</div>
+                }
+
+                <div>
+                    <a class="PostLogoutRedirectUri btn" href="@defaultURL" style="color: green;">Return to  <span>Global Health Way</span> </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

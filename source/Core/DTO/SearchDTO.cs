@@ -9,5 +9,7 @@ namespace SSO.Core.DTO
         public string Search { get; set; }
         public int Start { get; set; } = 0;
         public int Count { get; set; } = 10;
+        public string OrderBy { get; set; }
+        public string Direction { get; set; } = "asc";
     }
 }

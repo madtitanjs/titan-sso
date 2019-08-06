@@ -1,0 +1,274 @@
+﻿@model RegisterInputModel
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    ViewData["DisableNavHeader"] = false;
+    ViewData["DisableNavFooter"] = true;
+    ViewData["Title"] = "Sign in";
+
+    var _returnUrl = HttpUtility.UrlEncode(Model.ReturnUrl);
+    var defaultURL = _configuration["DEFAULT_APP"];
+}
+
+<style>
+    #phone_number::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    #phone_number {
+        -moz-appearance: textfield;
+    }
+
+
+    .sec-contain {
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+        display: flex;
+        place-content: center;
+        align-items: center;
+    }
+
+    .sec-hint {
+        font-size: 11px;
+        color: #adadad;
+    }
+
+    .sec-row {
+        flex-direction: row;
+        box-sizing: border-box;
+        display: flex;
+        place-content: center space-between;
+        justify-content: center space-between;
+        align-items: center;
+    }
+
+    .sec-row-flex {
+        flex: 1 1 0;
+        margin-right: 20px;
+    }
+
+        .sec-row-flex:last-child {
+            margin-right: 0;
+        }
+
+    @@media (min-width: 860px) {
+        .sec-container {
+            max-width: 720px;
+        }
+
+        .sec-contain {
+            align-items: center;
+        }
+    }
+
+    @@media (min-width: 576px) {
+        .sec-container {
+            max-width: 540px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .sec-container {
+            width: 100%;
+        }
+
+        .sec-contain {
+            align-items: flex-start;
+        }
+
+        .secure-card {
+            width: 100%;
+            box-shadow: none !important;
+        }
+
+        .sec-row.extras {
+            flex-direction: column;
+            box-sizing: border-box;
+            display: flex;
+            place-content: flex-start space-between;
+            justify-content: flex-start space-between;
+            align-items: stretch;
+        }
+
+            .sec-row.extras > .sec-row-flex {
+                flex: 1 1 0;
+                margin-right: 0px;
+            }
+    }
+
+    @@media (min-width: 860px) {
+        .sec-container {
+            max-width: 400px;
+            min-width: 400px;
+        }
+
+        .sec-contain {
+            align-items: center;
+        }
+    }
+
+    .secure-card {
+        box-shadow: 0 2px 5px 0 rgba(52,47,51,.2);
+    }
+</style>
+
+<div class="content-body" style="max-width: 500px; align-self: center;" >
+    <div style="align-items: center; text-align: center; display: flex; flex-direction: column">
+       
+        <div class="bordered-card" style="text-align: left; display: flex; flex-direction: column; margin-top: 20px; flex-grow: 1;  align-self: stretch; place-content: flex-start; justify-content: flex-start;">
+            <div style="text-align: center">
+                <span style="font-weight: 500; font-size: 14px">
+                    Register
+                </span>
+
+            </div>
+            <partial name="_ValidationSummary" />
+            <form class="sec-container" asp-route="Register" style="align-self: center; margin-top: 20px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+
+                            <input id="email" class="form-control" placeholder="Email" asp-for="Email" autofocus>
+                            <span class="sec-hint">Your email will be used as your primary login.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+
+                        <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
+                    </div>
+                </div>
+                <div class="sec-row extras">
+
+                    <div class="form-group sec-row-flex">
+                        <label class="form-label" for="username">First name</label>
+                        <input id="username" class="form-control" placeholder="First name" asp-for="FirstName" autofocus>
+                    </div>
+
+                    <div class="form-group sec-row-flex">
+                        <label class="form-label" for="username">Last name</label>
+                        <input id="username" class="form-control" placeholder="Last name" asp-for="LastName" autofocus>
+                    </div>
+                    <div class="form-group sec-row-flex">
+                        <label class="form-label" for="username">Phone number</label>
+                        <input id="phone_number" type="tel" class="form-control" placeholder="639xxxxxxxxx" asp-for="PhoneNumber">
+                    </div>
+                </div>
+
+                <div class="sec-row extras">
+
+
+                </div>
+                <div class="sec-row extras">
+                    <div class="form-group sec-row-flex">
+                        <label class="form-label" for="gender">Gender</label>
+                        <select id="gender" class="form-control" asp-for="Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group sec-row-flex">
+                        <label class="form-label" for="gender">Birth Date</label>
+                        <div style="display: flex; flex-direction: row">
+                            <div style="flex: 1 1 auto; margin-right: 20px;">
+                                <select id="birthday-month" class="form-control" asp-for="BirthdayMonth"></select>
+                            </div>
+                            <div style="flex: 1 1 auto;  margin-right: 20px;">
+                                <select id="birthday-day" class="form-control" asp-for="BirthdayDate"></select>
+                            </div>
+                            <div style="flex: 1 1 auto">
+                                <select id="birthday-year" class="form-control" asp-for="BirthdayYear"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fw" style="margin-top: 30px">
+                    <button class="custom-button fw" id="login" value="login" name="button" type="submit">
+                        <div>
+                            <span>Register</span>
+                        </div>
+                    </button>
+                </div>
+            </form>
+            <div style="margin-top: 20px; text-align: center;">
+                <a class="ghw-link" href="/account/login/?returnUrl=@_returnUrl">Have an account? Sign in here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    console.log('wasaps');
+    Date.prototype.toDateInputValue = (function () {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0, 10);
+    });
+
+    var day_options = [];
+    for (var i = 1; i <= 31; i++) {
+        var day_op = document.createElement("option");
+        day_op.value = i;
+        day_op.text = i;
+        day_options.push(day_op);
+    }
+
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var month_options = [];
+    months.forEach((val, index) => {
+        var month_op = document.createElement("option");
+        month_op.value = index + 1 >= 10 ? `${index + 1}` : `0${index + 1}`;
+        month_op.text = val;
+        month_options.push(month_op);
+    })
+
+    var year_options = [];
+    let year_now = new Date().getFullYear();
+    for (var i = year_now; i >= 1905; i--) {
+        var year_op = document.createElement("option");
+        year_op.value = i;
+        year_op.text = i;
+        year_options.push(year_op);
+    }
+
+    document.onreadystatechange = () => {
+        if (document.readyState === "complete") {
+
+            let byinput = document.getElementById("birthday-year");
+            year_options.forEach(op => { byinput.append(op); });
+            byinput.value = 1993;
+
+            let bminput = document.getElementById("birthday-month");
+            month_options.forEach(op => { bminput.append(op); });
+            bminput.value = "01";
+
+            let bdinput = document.getElementById("birthday-day");
+            day_options.forEach(op => { bdinput.append(op); });
+            bdinput.value = 1;
+
+
+            var pn = document.getElementById("phone_number");
+
+
+            // Prevent NULL input and replace text.
+            pn.onchange = function (event) {
+                this.value = this.value.replace(/[^0-9]+/g, '');
+                if (this.value < 1) this.value = 0;
+            };
+
+            pn.onkeydown = function (event) {
+                if (event.which === 40 || event.which === 38) event.preventDefault();
+            }
+            // Block non-numeric chars.
+            pn.onkeypress = function (event) {
+                return (((event.which > 47) && (event.which < 58)) || (event.which == 13));
+            };
+        }
+    }
+
+</script>

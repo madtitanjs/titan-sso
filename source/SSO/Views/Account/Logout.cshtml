@@ -1,0 +1,24 @@
+﻿@model LogoutViewModel
+@{
+    ViewData["DisableNavHeader"] = false;
+    ViewData["DisableNavFooter"] = true;
+    ViewData["Title"] = "Sign out";
+}
+<div class="logout-page fw fh flex-container">
+    <div class="row secure-card elevation-z4">
+        <div class="col-sm-12">
+            <div class="page-header">
+                <h3>Sign out</h3>
+            </div>
+            <p>Do you want to sign out of your account?</p>
+            <form asp-action="Logout">
+                <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                <fieldset style="margin-top: 30px">
+                    <div class="form-group flex-end-center" style="margin-bottom: 0px">
+                        <button class="btn btn-primary">Yes</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

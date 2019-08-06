@@ -1,0 +1,18 @@
+﻿.btn {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+
+    &.primary {
+        background-color: #177bcc;
+        color: white;
+
+        &:hover {
+            transition: 0.5s;
+            background-color: #0f5994;
+        }
+    }
+}

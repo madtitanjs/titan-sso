@@ -1,0 +1,22 @@
+﻿.row-start-center {
+    display: flex;
+    flex-direction: row;
+    place-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.row-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.column-start-stretch {
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    place-content: stretch flex-start;
+    justify-content: stretch flex-start;
+    align-items: stretch;
+    max-height: 100%;
+}

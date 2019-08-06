@@ -1,0 +1,24 @@
+﻿.input-form-field {
+    display: flex;
+    flex-direction: column;
+    label {
+        font-weight: 500;
+    }
+    input {
+        margin-top: 5px;
+        flex: 1 1 auto;
+        border-style: solid;
+        /* border-radius: 20px; */
+        border-width: 0.05rem;
+        border-color: initial;
+        font-size: 15px;
+        padding: 10px;
+        transition: 0.2s;
+
+
+
+        &:focus {
+            transition: 0.2s;
+        }
+    }
+}

@@ -1,0 +1,57 @@
+﻿.home {
+    padding: 0 20px;
+    overflow: hidden;
+    .user-section {
+        margin-top: 100px;
+        display: flex;
+        flex-direction: column;
+        place-content: center;
+        justify-content: center;
+        align-items: center;
+
+        .name {
+            font-size: 34px;
+            font-weight: 500;
+        }
+    }
+
+    .chat-section {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        place-content: flex-start space-between;
+        justify-content: flex-start space-between;
+        align-items: center;
+
+        img {
+            height: 500px;
+        }
+
+        .text {
+            margin-right: 30px;
+            max-width: 400px;
+        }
+
+        a {
+            display: block;
+
+            span {
+                margin-right: 10px;
+            }
+        }
+        /* Smartphones (portrait and landscape) ----------- */
+        @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+            flex-direction: column;
+
+            img {
+                width: 300px;
+                object-fit: contain;
+            }
+        }
+    }
+
+    @media only screen and (min-device-width : 1200px) {
+        max-width: 1200px;
+        margin: auto;
+    }
+}

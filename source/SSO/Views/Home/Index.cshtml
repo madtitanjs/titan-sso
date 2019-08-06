@@ -1,0 +1,55 @@
+
+
+@using IdentityServer4.Extensions
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+    }
+    ViewData["DisableNavHeader"] = false;
+    ViewData["DisableNavFooter"] = true;
+    ViewData["Title"] = "Home";
+    var appName = "Mad Titan";
+}
+
+<div class="home">
+
+    @if(User.IsAuthenticated())
+    {
+    <section class="user-section">
+        <span class="name">Hi @User.GetDisplayName()</span>
+        <p>Welcome to the Titan Suite of services.</p>
+    </section>
+    }
+    <section class="chat-section">
+        <img src="~/images/chat-vector.jpg" />
+        <div class="text">
+            <h1>Titan Chat</h1>
+            <p>A simple way to chat with your friends anytime and anywhere.</p>
+            <div class="row-reverse">
+                <a class="btn primary">
+                    <div class="row-start-center">
+                        <span>Go to Titan Chat</span>
+                        <i class="material-icons">
+                            arrow_forward
+                        </i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    @*@if (!string.IsNullOrWhiteSpace(name))
+        {
+            <a asp-action="Logout" style="color: white;" class="custom-button fw" id="login" value="login" name="button" asp-controller="Account">
+                Sign out
+            </a>
+        }
+        else
+        {
+            <a  href="~/account/login" style="color: white;" class="custom-button fw" id="login" value="login" name="button" >
+                Sign in
+            </a>
+        }*@
+</div>

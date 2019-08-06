@@ -1,0 +1,114 @@
+@model LoginViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    ViewData["DisableNavHeader"] = true;
+    ViewData["DisableNavFooter"] = true;
+    ViewData["Title"] = "Sign in";
+    var googleProvider = @Model.VisibleExternalProviders.Where(a => a.DisplayName == "Google").FirstOrDefault();
+
+    var _returnUrl = HttpUtility.UrlEncode(Model.ReturnUrl);
+    if(String.IsNullOrWhiteSpace(_returnUrl)) {
+        _returnUrl = "%2f";
+    }
+    var defaultURL = _configuration["DEFAULT_APP"];
+
+}
+
+<div class="login-screen">
+    <h2>Login to Mad Titan</h2>
+    <%:@Html.ModelValidationSummary()%>
+    <div class="login-card elevate-1">
+        <form asp-route="Login">
+            <div class="column-start-stretch">
+                <div class="input-form-field">
+                    <label>Username or email</label>
+                    <input type="text" name="username" asp-for="Username" />
+                </div>
+                <div class="input-form-field">
+                    <label>Password</label>
+                    <input type="password" name="password" asp-for="Password" />
+                </div>
+
+                <button class="btn primary" type="submit" value="login" name="button">Login</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-card elevate-1" style="margin-top: 20px">
+        <span>
+            New to Mad Titan? <a href="~/account/register">Create an account</a>
+        </span>
+    </div>
+</div>
+
+
+@*<div class="content-body" style="max-width: 400px; align-self: center;">
+    <div style="align-items: center; text-align: center; display: flex; flex-direction: column">
+        
+        <div class="bordered-card" style="margin-top: 20px; flex-grow: 1;  align-self: stretch;">
+            <span style="font-weight: 500; font-size: 14px">
+                Sign in with
+            </span>
+            <div style="display: flex; flex-direction: row; margin-top: 20px;  place-content: center; align-content: center">
+                <a class="external-login" asp-controller="External"
+                   asp-action="Challenge"
+                   asp-route-provider="@googleProvider.AuthenticationScheme"
+                   asp-route-returnUrl="@Model.ReturnUrl"
+                   style="margin-right: 20px">
+                    <div>
+                        <img src='~/google-logo.png'>
+                        <div class="label">
+
+                            <span>Google</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="bordered-card" style="margin-top: 20px; flex-grow: 1; align-self: stretch">
+            <span style="font-weight: 500; font-size: 14px">
+                Sign in with local account
+            </span>
+            <partial name="_ValidationSummary" />
+            <div class="login-form" style="margin-top: 20px;">
+                <form asp-route="Login">
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <div class="custom-form-field">
+                        <input placeholder="email" type="text" id="username" asp-for="Username" autofocus autocomplete="on">
+                    </div>
+                    <div class="custom-form-field" style="margin-top: 20px">
+                        <input placeholder="password" type="password" name="password" asp-for="Password" autocomplete="on">
+                    </div>
+
+                    @if (Model.AllowRememberLogin)
+                    {
+                    <div style="flex-direction: row; display: flex; place-content: flex-start; justify-content: flex-start;">
+                        <label style="margin-top: 20px" class="custom-checkbox">
+                            <input type="checkbox" asp-for="RememberLogin">
+                            <span class="checkmark"></span>
+                            <section class="label">
+                                <span>Keep me signed in</span>
+                            </section>
+                        </label>
+                    </div>
+                    }
+
+                    <div class="fw" style="margin-top: 30px">
+                        <button class="custom-button fw" id="login" value="login" name="button">
+                            <div>
+                                <span>Sign in</span>
+                            </div>
+                        </button>
+                    </div>
+
+                </form>
+
+                <div style="margin-top: 20px">
+                    <a class="ghw-link" href="/account/register/?returnUrl=@_returnUrl">No account? Sign up here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@

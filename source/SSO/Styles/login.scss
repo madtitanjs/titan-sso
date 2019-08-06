@@ -1,0 +1,24 @@
+﻿.login-screen {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+
+    .login-card {
+        width: 400px;
+        padding: 20px;
+        box-sizing: border-box;
+
+        .input-form-field {
+            margin: 5px 0;
+        }
+
+        button {
+            margin-top: 30px;
+        }
+    }
+}

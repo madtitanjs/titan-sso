@@ -1,13 +1,13 @@
+using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Services;
+using SSO.Core;
 using SSO.Core.Extensions;
 using SSO.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
@@ -55,19 +55,34 @@ namespace SSO
                 op.OperationFilter<AuthorizeCheckOperationFilter>();
             });
 
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            services.AddAuthentication("Bearer")
+                    .AddCookie(Constants.ProviderCookies.Facebook)
+                    .AddCookie(Constants.ProviderCookies.Google)
+                    .AddCookie(Constants.ProviderCookies.Twitter)
+                    .AddJwtBearer("Bearer", options =>
+                    {
+                        options.Authority = Configuration["Host"];
+                        options.RequireHttpsMetadata = false;
+
+                        options.Audience = "admin";
+                    })
+                    .AddGoogle("Google", op =>
+                    {
+                        op.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                        op.ClientId = Configuration["ExternalProviders:google:clientid"];
+                        op.ClientSecret = Configuration["ExternalProviders:google:clientsecret"];
+                        op.Scope.Add("email");
+                        op.Scope.Add("profile");
+                        op.Scope.Add("openid");
+                    });
 
             services.AddSession();
 
             services
-    .AddMvc()
-    .AddSessionStateTempDataProvider()
-    .AddJsonOptions(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-        }
+                .AddMvc()
+                .AddSessionStateTempDataProvider()
+                .AddJsonOptions(options => { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -84,7 +99,6 @@ namespace SSO
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -101,20 +115,7 @@ namespace SSO
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
