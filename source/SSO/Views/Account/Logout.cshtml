@@ -1,24 +1,36 @@
 ﻿@model LogoutViewModel
 @{
-    ViewData["DisableNavHeader"] = false;
+    ViewData["DisableNavHeader"] = true;
     ViewData["DisableNavFooter"] = true;
     ViewData["Title"] = "Sign out";
 }
-<div class="logout-page fw fh flex-container">
-    <div class="row secure-card elevation-z4">
-        <div class="col-sm-12">
-            <div class="page-header">
-                <h3>Sign out</h3>
-            </div>
-            <p>Do you want to sign out of your account?</p>
-            <form asp-action="Logout">
-                <input type="hidden" name="logoutId" value="@Model.LogoutId" />
-                <fieldset style="margin-top: 30px">
-                    <div class="form-group flex-end-center" style="margin-bottom: 0px">
-                        <button class="btn btn-primary">Yes</button>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
+
+
+<div class="logout-screen">
+    <h2>Logout of <a href="~/">Mad Titan</a></h2>
+    <div class="logout-card elevate-1">
+        <form asp-action="Logout" class="logout-form">
+            <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+            <span>Are you sure you want to logout?</span>
+            <button class="btn primary">Yes</button>
+        </form>
     </div>
 </div>
+@*<div class="logout-page fw fh flex-container">
+        <div class="row secure-card elevation-z4">
+            <div class="col-sm-12">
+                <div class="page-header">
+                    <h3>Sign out</h3>
+                </div>
+                <p>Do you want to sign out of your account?</p>
+                <form asp-action="Logout">
+                    <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                    <fieldset style="margin-top: 30px">
+                        <div class="form-group flex-end-center" style="margin-bottom: 0px">
+                            <button class="btn btn-primary">Yes</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>*@

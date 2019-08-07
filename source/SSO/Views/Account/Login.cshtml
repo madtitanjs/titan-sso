@@ -15,15 +15,18 @@
 }
 
 <div class="login-screen">
-    <h2>Login to Mad Titan</h2>
-    <%:@Html.ModelValidationSummary()%>
+    <h2>Login to <a href="~/">Mad Titan</a></h2>
+    <div class="login-validation">
+        <partial name="_ValidationSummary" />
+    </div>
     <div class="login-card elevate-1">
         <form asp-route="Login">
             <div class="column-start-stretch">
                 <div class="input-form-field">
-                    <label>Username or email</label>
+                    <label>Email</label>
                     <input type="text" name="username" asp-for="Username" />
                 </div>
+
                 <div class="input-form-field">
                     <label>Password</label>
                     <input type="password" name="password" asp-for="Password" />
@@ -34,9 +37,9 @@
         </form>
     </div>
 
-    <div class="login-card elevate-1" style="margin-top: 20px">
+    <div class="login-card elevate-1 create-link" style="margin-top: 20px">
         <span>
-            New to Mad Titan? <a href="~/account/register">Create an account</a>
+            New? <a href="~/account/register">Create an account</a>
         </span>
     </div>
 </div>

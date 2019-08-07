@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         // Clean
-        clean: ["wwwroot/css/*", 'site.scss'],
+        clean: ["wwwroot/css/*", 'site.scss', 'wwwroot/lib/bundle.js'],
         // Sass
         sass: {
             options: {
@@ -29,14 +29,18 @@ module.exports = function (grunt) {
             }
         },
         concat: {
-            all: {
+            scss: {
                 src: ['Styles/**/*.scss'],
                 dest: 'site.scss'
+            },
+            js: {
+                src: ['Scripts/**/*.js'],
+                dest: 'wwwroot/lib/bundle.js'
             }
         },
         watch: {
             tasks: ["all"],
-            files: ["Styles/**/*.scss"]
+            files: ["Styles/**/*.scss", "Scripts/**/*.js"]
         }
     });
 
@@ -47,5 +51,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     // Default task(s).
     grunt.registerTask('default', ['sass']);
-    grunt.registerTask('all', ['clean','concat','sass'])
+    grunt.registerTask('all', ['clean','concat:scss','sass','concat:js'])
 };

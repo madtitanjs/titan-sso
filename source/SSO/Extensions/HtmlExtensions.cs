@@ -9,18 +9,18 @@ namespace SSO.Extensions
 {
     public static class HtmlExtensions
     {
-        public static string ModelValidationSummary<T>(this IHtmlHelper<T> htmlHelper)
+        public static IEnumerable<string> ModelValidationSummary<T>(this IHtmlHelper<T> htmlHelper)
         {
-            string ret = string.Empty;
+            List<string> errors = new List<string>();
             var modelState = htmlHelper.ViewData.ModelState;
             foreach (var key in modelState.Keys)
             {
                 foreach(var err in modelState[key].Errors)
                 {
-                    ret += $"<p>{err.ErrorMessage}</p>";
+                    errors.Add(err.ErrorMessage);
                 }
             }
-            return ret;
+            return errors;
         }
     }
 }

@@ -15,14 +15,25 @@
 
 <div class="home">
 
-    @if(User.IsAuthenticated())
+    <div style="margin-top: 100px; text-align: center">
+        <h1>
+            One account to rule them all
+        </h1>
+        <p>
+            Use the <b>Mad Titan</b> suite of services with a single <b>Account</b>.
+        </p>
+    </div>
+
+    @if (User.IsAuthenticated())
     {
-    <section class="user-section">
-        <span class="name">Hi @User.GetDisplayName()</span>
-        <p>Welcome to the Titan Suite of services.</p>
-    </section>
+        <section class="user-section">
+            <span class="name">Hi @User.GetDisplayName()</span>
+            <p>Welcome to the Titan Suite of services.</p>
+        </section>
     }
-    <section class="chat-section">
+
+
+    <section class="chat-section" style="margin-top: 50px">
         <img src="~/images/chat-vector.jpg" />
         <div class="text">
             <h1>Titan Chat</h1>

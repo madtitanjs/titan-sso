@@ -97,10 +97,6 @@ namespace SSO.Idsrv
         {
             // check if we are in the context of an authorization request
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-            var birthMonth = model.BirthdayMonth < 10 ? $"0{model.BirthdayMonth}" : $"{model.BirthdayMonth}";
-            var birthDate = model.BirthdayDate < 10 ? $"0{model.BirthdayDate}" : $"{model.BirthdayDate}";
-            var BirthDay = $"{birthMonth}/{birthDate}/{model.BirthdayYear}";
-
            
             if (ModelState.IsValid)
             {
@@ -126,9 +122,6 @@ namespace SSO.Idsrv
                 {
                         new Claim(ClaimTypes.GivenName, model.FirstName),
                         new Claim(ClaimTypes.Surname, model.LastName),
-                        new Claim(ClaimTypes.Gender, model.Gender),
-                        new Claim(ClaimTypes.MobilePhone, model.PhoneNumber),
-                        new Claim(ClaimTypes.DateOfBirth, BirthDay),
                 };
 
                 var umResult =  await _identityService.UserManager.CreateAsync(user, model.Password);

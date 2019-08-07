@@ -231,3 +231,8 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+
+# CUSTOMS
+**/Scripts/**/*.js
+**/Scripts/**/*.js.map

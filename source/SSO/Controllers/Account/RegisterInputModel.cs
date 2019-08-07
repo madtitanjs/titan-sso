@@ -14,8 +14,7 @@ namespace SSO.Idsrv
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Email is not valid")]
+
         public string Email { get; set; }
 
         public string LoginProvider { get; set; }
@@ -32,19 +31,14 @@ namespace SSO.Idsrv
         public bool RememberLogin { get; set; }
         public string ReturnUrl { get; set; }
 
-        [Required(ErrorMessage = "Phone number is required")]
-        [MaxLength(12, ErrorMessage ="Phone number must not exceed 12 digits. 09xxxxxxxxx or 639xxxxxxxxx")]
         public string PhoneNumber { get; set; }
-        [Required(ErrorMessage = "Gender is required")]
+
         public string Gender { get; set; }
 
-        [Required(ErrorMessage = "Birthday is required")]
         public int BirthdayDate { get; set; }
 
-        [Required(ErrorMessage = "Birthday is required")]
         public int BirthdayMonth { get; set; }
-
-        [Required(ErrorMessage = "Birthday is required")]
+       
         public int BirthdayYear { get; set; }
 
         public string Address { get; set; }

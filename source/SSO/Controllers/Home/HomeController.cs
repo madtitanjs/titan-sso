@@ -45,6 +45,10 @@ namespace SSO.Idsrv
             return View();
         }
 
+        public IActionResult Contact()
+        {
+            return View();
+        }
         /// <summary>
         /// Shows the error page
         /// </summary>

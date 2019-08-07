@@ -9,9 +9,38 @@
     var defaultURL = _configuration["DEFAULT_APP"];
 }
 
+<div class="logout-screen">
+    <h2>Logged out of <a href="~/">Mad Titan</a></h2>
+    <div class="logout-card elevate-1">
+        <span>You have been logged out of your account.</span>
+        @if (Model.PostLogoutRedirectUri != null)
+        {
+            <div>
+                @if (Model.ClientName.Contains("Global Health Way"))
+                {
+                    <a class="PostLogoutRedirectUri btn" href="@Model.PostLogoutRedirectUri" style="color: green;">Return to  <span>@Model.ClientName</span> </a>
+                }
+                else
+                {
+                    <a class="PostLogoutRedirectUri btn" href="@Model.PostLogoutRedirectUri">Return to  <span>@Model.ClientName</span> </a>
+                }
 
+            </div>
+        }
+        @if (Model.SignOutIframeUrl != null)
+        {
+            <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>
+        }
+        @if (Model.PostLogoutRedirectUri == null && Model.SignOutIframeUrl == null)
+        {
+            <div>
+                <a class="PostLogoutRedirectUri btn" href="~/">Return to home</a>
+            </div>
+        }
+    </div>
+</div>
 
-<div class="content-body" style="max-width: 500px; align-self: center;">
+@*<div class="content-body" style="max-width: 500px; align-self: center;">
     <div style="align-items: center; text-align: center; display: flex; flex-direction: column">
         
 
@@ -53,7 +82,7 @@
             }
         </div>
     </div>
-</div>
+</div>*@
 
 
 

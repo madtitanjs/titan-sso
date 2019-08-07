@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
     <link rel="stylesheet" href="~/css/site.css" />
-
+    <script src="~/lib/bundle.js"></script>
 </head>
 <body>
 
@@ -56,9 +56,9 @@
                 <a href="/home/about" class="header-link">
                     About
                 </a>
-                <a href="#" class="header-link">
+                @*<a href="/home/contact" class="header-link">
                     Contact
-                </a>
+                </a>*@
                 @if (!User.IsAuthenticated())
                 {
                     <a href="~/account/login" class="header-link">
@@ -78,8 +78,8 @@
         <div class="content">
             @RenderBody()
         </div>
-        <div class="footer container" style="margin-top: 30px; height: 40px">
-            <span>©2019 Mad Titan</span>
+        <div class="footer" style="margin-top: 30px; height: 40px">
+            <span>©2019 <a href="https://github.com/madtitanjs">Mad Titan</a> by <a href="https://github.com/judedaryl">Daryl Clarino</a></span>
         </div>
 
     </div>
