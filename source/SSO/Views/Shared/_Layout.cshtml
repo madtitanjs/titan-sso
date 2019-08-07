@@ -48,32 +48,35 @@
     <div class="main-container">
         @if (!disableHeader)
         {
-            <div class="header">
-                <a href="~/">
-                    <h3 class="app-name">@appName</h3>
+        <div class="header">
+            <a href="~/">
+                <h3 class="app-name">@appName</h3>
+            </a>
+            <span class="spacer"></span>
+            <a href="/home/about" class="header-link">
+                About
+            </a>
+            @*<a href="/home/contact" class="header-link">
+            Contact
+        </a>*@
+            @if (!User.IsAuthenticated())
+            {
+                <a href="~/account/login" class="header-link">
+                    Login
                 </a>
-                <span class="spacer"></span>
-                <a href="/home/about" class="header-link">
-                    About
+                <a href="~/account/register" class="header-link">
+                    Register
                 </a>
-                @*<a href="/home/contact" class="header-link">
-                    Contact
-                </a>*@
-                @if (!User.IsAuthenticated())
-                {
-                    <a href="~/account/login" class="header-link">
-                        Login
-                    </a>
-                }
-                else
-                {
-                    <a href="~/account/logout" class="header-link">
-                        Logout
-                    </a>
-                }
+            }
+            else
+            {
+                <a href="~/account/logout" class="header-link">
+                    Logout
+                </a>
+            }
 
 
-            </div>
+        </div>
         }
         <div class="content">
             @RenderBody()

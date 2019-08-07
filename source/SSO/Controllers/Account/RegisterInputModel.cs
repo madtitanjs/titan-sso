@@ -15,6 +15,7 @@ namespace SSO.Idsrv
         [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
 
+        [EmailAddress]
         public string Email { get; set; }
 
         public string LoginProvider { get; set; }

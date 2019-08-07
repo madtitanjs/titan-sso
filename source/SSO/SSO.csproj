@@ -7,6 +7,7 @@
     <IsPackable>false</IsPackable>
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>13d8791b-a9cb-4d7d-b544-73fdf73ba589</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
