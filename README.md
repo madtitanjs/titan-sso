@@ -1,0 +1,1 @@
+[![Build Status](https://dev.azure.com/clarinojd/madtitan/_apis/build/status/MadTitan%20SSO?branchName=master)](https://dev.azure.com/clarinojd/madtitan/_build/latest?definitionId=4&branchName=master)
